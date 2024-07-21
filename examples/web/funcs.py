@@ -61,7 +61,7 @@ def on_audio_seed_change(audio_seed_input):
 
 def load_chat(cust_path: Optional[str], coef: Optional[str]) -> bool:
     if cust_path == None:
-        ret = chat.load(coef=coef, compile=sys.platform != "win32")
+        ret = chat.load(coef=coef, compile=False) # compile=sys.platform != "win32"
     else:
         logger.info("local model path: %s", cust_path)
         ret = chat.load(

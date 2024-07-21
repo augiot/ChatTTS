@@ -2,6 +2,8 @@ import os, sys
 
 if sys.platform == "darwin":
     os.environ["PYTORCH_ENABLE_MPS_FALLBACK"] = "1"
+    
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 now_dir = os.getcwd()
 sys.path.append(now_dir)
