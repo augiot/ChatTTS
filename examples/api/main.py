@@ -26,21 +26,37 @@ from pydantic import BaseModel
 
 
 logger = get_logger("Command")
+from contextlib import asynccontextmanager
 
-app = FastAPI()
-
-
-@app.on_event("startup")
-async def startup_event():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("启动前执行")
     global chat
 
     chat = ChatTTS.Chat(get_logger("ChatTTS"))
     logger.info("Initializing ChatTTS...")
-    if chat.load():
+    if chat.load(compile=False):
         logger.info("Models loaded successfully.")
     else:
         logger.error("Models load failed.")
         sys.exit(1)
+    yield
+    print("关闭后前执行")
+
+app = FastAPI(lifespan=lifespan)
+
+
+# @app.on_event("startup")
+# async def startup_event():
+#     global chat
+
+#     chat = ChatTTS.Chat(get_logger("ChatTTS"))
+#     logger.info("Initializing ChatTTS...")
+#     if chat.load():
+#         logger.info("Models loaded successfully.")
+#     else:
+#         logger.error("Models load failed.")
+#         sys.exit(1)
 
 
 class ChatTTSParams(BaseModel):
